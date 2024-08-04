@@ -58,3 +58,62 @@
 11. **Explain how FixedThreadPool executor works?**
 
     In a `FixedThreadPool`, a fixed number of worker threads are created when the pool is created. Tasks submitted to the pool are assigned to these worker threads for execution. If all the worker threads are busy when a task is submitted, the task is placed in a queue until a worker thread becomes available. Once a worker thread completes a task, it picks up the next task from the queue (if any). The number of worker threads in the pool remains constant, and excess tasks are queued until a worker thread becomes available.
+
+java.util.concurrent package provides a powerful framework for managing concurrent tasks in Java. It includes classes like `ExecutorService`, `Future`, `CompletableFuture`, `ThreadLocal`, `CountDownLatch`, `CyclicBarrier`, `ReentrantLock`, etc., that help in writing efficient and scalable concurrent programs.
+
+java.util.function package provides functional interfaces like `Runnable`, `Callable`, `Supplier`, `Consumer`, `Function`, etc., that are used in conjunction with the concurrent classes to define and execute tasks concurrently.
+
+java.util.* package provides a wide range of utility classes and interfaces that are used in concurrent programming, such as `Collections`, `Arrays`, `Map`, `List`, `Set`, `Queue`, etc.
+
+---
+
+In Java, when dealing with threads, `thread.start()` and `thread.run()` are two methods used to begin the execution of a thread, but they differ significantly in their functionality and purpose:
+
+### 1. `thread.start()`
+- **Purpose:** Used to start a new thread of execution, which invokes the `run()` method of the thread.
+- **Functionality:**
+    - **Creates a New Thread:** When `thread.start()` is called, a new thread is created and its lifecycle begins.
+    - **Concurrency:** The `run()` method of the thread runs concurrently in a separate call stack.
+    - **Asynchronous Execution:** `start()` returns immediately after starting the thread, allowing the calling thread to continue executing independently.
+    - **Thread Safety:** Ensures proper thread lifecycle management and safe concurrent execution of multiple threads.
+
+- **Example:**
+  ```java
+  Thread thread = new Thread(() -> {
+      System.out.println("Thread running: " + Thread.currentThread().getName());
+  });
+  thread.start(); // Starts a new thread and executes the lambda in its own context
+  ```
+
+### 2. `thread.run()`
+- **Purpose:** Directly calls the `run()` method of the thread in the current thread's context, without starting a new thread.
+- **Functionality:**
+    - **Runs Sequentially:** Executes the `run()` method synchronously in the current thread, without any concurrency.
+    - **No New Thread:** Does not create a new thread; instead, it runs in the current thread's stack.
+    - **Blocking:** `run()` method runs to completion before the control returns to the caller, blocking further execution until it finishes.
+    - **No Thread Safety:** Since it runs synchronously in the current thread, it does not provide concurrency benefits or thread safety.
+
+- **Example:**
+  ```java
+  Thread thread = new Thread(() -> {
+      System.out.println("Thread running: " + Thread.currentThread().getName());
+  });
+  thread.run(); // Executes the run method in the current thread context
+  ```
+
+### Key Differences:
+- **Concurrency:** `start()` creates a new thread and runs `run()` concurrently, while `run()` executes synchronously in the current thread.
+- **New Thread Creation:** `start()` initiates a new thread's lifecycle, whereas `run()` runs in the current thread without starting a new one.
+- **Asynchronous vs Synchronous:** `start()` enables asynchronous execution, allowing concurrent operation, while `run()` is synchronous and blocks further execution until completion.
+- **Thread Safety:** `start()` ensures proper thread management and concurrency control, providing thread safety, whereas `run()` runs in a single thread context and does not offer concurrency benefits.
+
+### When to Use Each:
+- **Use `thread.start()`**:
+    - When you need concurrent execution or want to leverage multi-threading for parallel tasks.
+    - When the thread's execution should not block the caller's thread.
+
+- **Use `thread.run()`**:
+    - When you want to execute the thread's logic in a synchronous manner within the current thread's context.
+    - Useful for sequential execution or testing purposes where multi-threading is not required.
+
+In summary, `thread.start()` and `thread.run()` serve different purposes: `start()` initiates a new thread for concurrent execution, while `run()` directly executes the thread's logic in the current thread's context synchronously.

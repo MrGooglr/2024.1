@@ -5,7 +5,6 @@ import com.aniket.misc.dto.Team;
 import com.aniket.util.Utility;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ProgrammsImpl implements  IProgramms{
@@ -29,7 +28,10 @@ public class ProgrammsImpl implements  IProgramms{
 //        ));
 
         //printMaxSalEmployeePerDepartment();
-        getEvenfirstAndOddLastArray();
+        //getEvenfirstAndOddLastArray();
+        //System.out.println(getEveryWordReverse("My Name Is"));
+
+        System.out.println(validParenthesis("({{{{}}}))"));
     }
 
 
@@ -119,6 +121,59 @@ public class ProgrammsImpl implements  IProgramms{
             pointerRight--;
         }
         Utility.printArrayElementAsAString(Arrays.stream(a).boxed().toArray(Integer[]::new));
+    }
+
+    public static int[] threeSome(){
+        return null;
+    }
+
+    public static String getEveryWordReverse(String providedSentence){
+        String[] splittedWords = providedSentence.split(" ");
+        StringBuilder builder = new StringBuilder();
+        for(int i=0;i<splittedWords.length;i++){
+            builder.append(reverse(splittedWords[i]));
+        }
+        return builder.toString().trim();
+    }
+
+    private static StringBuilder reverse(String string){
+        return new StringBuilder(new StringBuilder(string).reverse() + " ");
+    }
+
+    private static int[] twoSumWithMap(int[] arr, int sum){
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i=0;i<arr.length;i++){
+            int complement = sum - arr[i];
+            if(map.containsKey(complement)){
+                return new int[]{map.get(complement),i};
+            }
+            map.put(arr[i],i);
+        }
+        throw new IllegalArgumentException("NO TWO SUM");
+    }
+
+    public static boolean validParenthesis(String s){
+
+        if (s.length() == 0 || s.length()%2!=0) {
+            return false;
+        }
+        Deque<Character> st = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(' || c == '{' || c == '[') {
+                st.push(c);
+            } else {
+                if (st.isEmpty()) {
+                    return false;
+                }
+                char ch = st.pop();
+                if ((c == ')' && ch != '(') || (c == '}' && ch != '{') || (c == ']' && ch != '[')) {
+                    return false;
+                }
+            }
+        }
+        return st.isEmpty();
+
     }
 
 }
